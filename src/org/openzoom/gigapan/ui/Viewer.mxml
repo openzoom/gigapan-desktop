@@ -77,7 +77,7 @@
 
         ]]>
     </mx:Script>
-    <openzoom:MultiScaleImage2
+    <openzoom:MultiScaleImage
         id="image"
         top="0"
         right="0"
@@ -100,5 +100,5 @@
                 <constraints:VisibilityConstraint/>
             </constraints:CompositeConstraint>
         </openzoom:constraint>
-    </openzoom:MultiScaleImage2>
+    </openzoom:MultiScaleImage>
 </mx:Canvas>
