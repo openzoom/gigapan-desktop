@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:WindowedApplication
+	xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+	xmlns:components="org.openzoom.flex.components.*"
+	xmlns:controllers="org.openzoom.flash.viewport.controllers.*"
+	xmlns:transformers="org.openzoom.flash.viewport.transformers.*"
+	width="960"
+	height="600"
+	backgroundColor="#000000"
+	showStatusBar="false"
+	applicationComplete="applicationCompleteHandler(event)"
+	displayStateChange="displayStateChangeHandler(event)"
+	resize="resizeHandler(event)">
+
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			import mx.events.ResizeEvent;
+
+			import org.openzoom.flash.components.MultiScaleImage;
+			import org.openzoom.flash.descriptors.IImagePyramidDescriptor;
+			import org.openzoom.flash.descriptors.gigapan.GigaPanDescriptor;
+			import org.openzoom.flash.viewport.constraints.CenterConstraint;
+			import org.openzoom.flash.viewport.constraints.CompositeConstraint;
+			import org.openzoom.flash.viewport.constraints.ScaleConstraint;
+			import org.openzoom.flash.viewport.constraints.ZoomConstraint;
+			import org.openzoom.flash.viewport.controllers.ContextMenuController;
+			import org.openzoom.flash.viewport.controllers.KeyboardController;
+			import org.openzoom.flash.viewport.controllers.MouseController;
+			import org.openzoom.flash.viewport.transformers.TweenerTransformer;
+
+            // Constants
+			private static const DEFAULT_SCENE_DIMENSION:uint = 16384
+			private static const DEFAULT_PIXEL_RATIO:uint = 2
+
+            // Variables
+			private var image:MultiScaleImage
+
+            // Event handlers
+			private function applicationCompleteHandler(event:FlexEvent):void
+			{
+                // Event handlers
+				stage.addEventListener(FullScreenEvent.FULL_SCREEN,
+									   fullscreenHandler,
+									   false, 0, true)
+
+                // Descriptors
+				var descriptor:IImagePyramidDescriptor =
+						GigaPanDescriptor.fromID(5322, 154730, 36408)
+
+                // Viewer
+				image = new MultiScaleImage()
+				image.source = descriptor
+
+                // Transformer
+				image.transformer = new TweenerTransformer()
+
+                // Controllers
+				image.controllers = [new MouseController(),
+									 new KeyboardController(),
+									 new ContextMenuController()]
+
+				// Constraints
+				var maxDimension:Number = Math.max(descriptor.width, descriptor.height)
+				var actualMaxScale:Number = maxDimension / DEFAULT_SCENE_DIMENSION
+				var maxScale:Number = actualMaxScale * DEFAULT_PIXEL_RATIO
+
+				var zoomConstraint:ZoomConstraint = new ZoomConstraint()
+					zoomConstraint.minZoom = 1
+				var centerConstraint:CenterConstraint = new CenterConstraint()
+				var scaleConstraint:ScaleConstraint = new ScaleConstraint()
+					scaleConstraint.maxScale = maxScale
+				var compositeConstraint:CompositeConstraint = new CompositeConstraint()
+					compositeConstraint.constraints = [zoomConstraint,
+													   scaleConstraint,
+													   centerConstraint]
+				image.constraint = compositeConstraint
+
+
+				imageContainer.addChild(image)
+				layoutApplication()
+			}
+
+            private function resizeHandler(event:ResizeEvent):void
+            {
+                layoutApplication()
+            }
+
+            private function displayStateChangeHandler(event:NativeWindowDisplayStateEvent):void
+            {
+                layoutApplication()
+            }
+
+            private function fullscreenHandler(event:FullScreenEvent):void
+            {
+                layoutApplication()
+            }
+
+            // Layout
+            private function layoutApplication():void
+            {
+                if (image)
+                {
+                    image.width = imageContainer.width
+                    image.height = imageContainer.height
+                }
+            }
+
+		]]>
+	</fx:Script>
+
+	<s:SpriteVisualElement
+		id="imageContainer"
+		width="100%"
+		height="100%"
+		/>
+
+</s:WindowedApplication>
