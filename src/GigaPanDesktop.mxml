@@ -80,8 +80,8 @@
 
                 // Controllers
                 image.controllers = [new MouseController(),
-                    new KeyboardController(),
-                    new ContextMenuController()]
+                                     new KeyboardController(),
+                                     new ContextMenuController()]
 
                 // Constraints
                 var maxDimension:Number = Math.max(descriptor.width, descriptor.height)
