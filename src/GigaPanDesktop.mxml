@@ -1,186 +1,187 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:WindowedApplication
-	xmlns:fx="http://ns.adobe.com/mxml/2009"
-	xmlns:s="library://ns.adobe.com/flex/spark"
-	xmlns:mx="library://ns.adobe.com/flex/mx"
-	xmlns:components="org.openzoom.flex.components.*"
-	xmlns:controllers="org.openzoom.flash.viewport.controllers.*"
-	xmlns:transformers="org.openzoom.flash.viewport.transformers.*"
-	width="960"
-	height="600"
-	backgroundColor="#000000"
-	showStatusBar="false"
-	applicationComplete="applicationCompleteHandler(event)"
-	displayStateChange="displayStateChangeHandler(event)"
-	resize="resizeHandler(event)">
-	
-	<fx:Declarations>
-		<s:HTTPService
-			id="mostPopularService"
-			url="http://api.gigapan.org/beta/gigapans/most_popular.json"
-			resultFormat="text"
-			result="mostPopularService_resultHandler(event)"
-			/>
-	</fx:Declarations>
-	
-	<fx:Script>
-		<![CDATA[
-			
-			import com.adobe.serialization.json.JSON;
-			
-			import mx.collections.ArrayCollection;
-			import mx.events.FlexEvent;
-			import mx.events.ResizeEvent;
-			import mx.rpc.events.ResultEvent;
-			
-			import org.openzoom.flash.components.MultiScaleImage;
-			import org.openzoom.flash.descriptors.IImagePyramidDescriptor;
-			import org.openzoom.flash.descriptors.gigapan.GigaPanDescriptor;
-			import org.openzoom.flash.viewport.constraints.CenterConstraint;
-			import org.openzoom.flash.viewport.constraints.CompositeConstraint;
-			import org.openzoom.flash.viewport.constraints.ScaleConstraint;
-			import org.openzoom.flash.viewport.constraints.ZoomConstraint;
-			import org.openzoom.flash.viewport.controllers.ContextMenuController;
-			import org.openzoom.flash.viewport.controllers.KeyboardController;
-			import org.openzoom.flash.viewport.controllers.MouseController;
-			import org.openzoom.flash.viewport.transformers.TweenerTransformer;
-			
-			// Constants
-			private static const DEFAULT_SCENE_DIMENSION:uint = 16384
-			private static const DEFAULT_PIXEL_RATIO:uint = 2
-			private static const DEFAULT_GIGAPAN:GigaPanDescriptor =
-				GigaPanDescriptor.fromID(5322, 154730, 36408)
-			
-			// Variables
-			private var image:MultiScaleImage
-			
-			[Bindable]
-			private var gigapansCollection:ArrayCollection = new ArrayCollection()
-			
-			// Event handlers
-			private function applicationCompleteHandler(event:FlexEvent):void
-			{
-				// Event handlers
-				stage.addEventListener(FullScreenEvent.FULL_SCREEN,
-					fullscreenHandler,
-					false, 0, true)
-				
-				mostPopularService.send()
-				
-				// Descriptors
-				var descriptor:IImagePyramidDescriptor = DEFAULT_GIGAPAN
-				
-				// Viewer
-				image = new MultiScaleImage()
-				image.source = descriptor
-				
-				// Transformer
-				image.transformer = new TweenerTransformer()
-				
-				// Controllers
-				image.controllers = [new MouseController(),
-					new KeyboardController(),
-					new ContextMenuController()]
-				
-				// Constraints
-				var maxDimension:Number = Math.max(descriptor.width, descriptor.height)
-				var actualMaxScale:Number = maxDimension / DEFAULT_SCENE_DIMENSION
-				var maxScale:Number = actualMaxScale * DEFAULT_PIXEL_RATIO
-				
-				var zoomConstraint:ZoomConstraint = new ZoomConstraint()
-				zoomConstraint.minZoom = 1
-				var centerConstraint:CenterConstraint = new CenterConstraint()
-				var scaleConstraint:ScaleConstraint = new ScaleConstraint()
-				scaleConstraint.maxScale = maxScale
-				var compositeConstraint:CompositeConstraint = new CompositeConstraint()
-				compositeConstraint.constraints = [zoomConstraint,
-					scaleConstraint,
-					centerConstraint]
-				image.constraint = compositeConstraint
-				
-				
-				imageContainer.addChild(image)
-				layoutApplication()
-			}
-			
-			private function resizeHandler(event:ResizeEvent):void
-			{
-				layoutApplication()
-			}
-			
-			private function displayStateChangeHandler(event:NativeWindowDisplayStateEvent):void
-			{
-				layoutApplication()
-			}
-			
-			private function fullscreenHandler(event:FullScreenEvent):void
-			{
-				layoutApplication()
-			}
-			
-			// Layout
-			private function layoutApplication():void
-			{
-				if (image)
-				{
-					image.width = imageContainer.width
-					image.height = imageContainer.height
-				}
-			}
-			
-			private function mostPopularService_resultHandler(event:ResultEvent):void
-			{
-				var resultObject:Object = JSON.decode(event.result.toString())
-				var items:Array = resultObject.items || []
-				var gigapans:Array = []
-				items.forEach(function (item:Object, ...rest):void {
-					var id:int = item[0]
-					var gigapan:Object = item[1]
-					gigapans.push({
-						name: gigapan.name,
-						id: gigapan.id,
-						width: gigapan.width,
-						height: gigapan.height
-					})
-				})
-				
-				gigapansCollection.source = gigapans
-			}
-			
-			private function gigapansList_clickHandler(event:MouseEvent):void
-			{
-				var gigapan:Object = gigapansList.selectedItem
-				
-				if (gigapan.id)
-				{
-					var descriptor:GigaPanDescriptor =
-						GigaPanDescriptor.fromID(gigapan.id,
-							gigapan.width,
-							gigapan.height)
-					image.source = descriptor
-				}
-			}
-			
-		]]>
-	</fx:Script>
-	
-	<s:SpriteVisualElement
-		id="imageContainer"
-		left="0"
-		right="200"
-		top="0"
-		bottom="0"
-		/>
-	
-	<s:List
-		id="gigapansList"
-		itemRenderer="org.openzoom.gigapan.itemRenderers.ListItem"
-		width="200"
-		right="0"
-		bottom="0"
-		top="0"
-		dataProvider="{gigapansCollection}"
-		click="gigapansList_clickHandler(event)"
-		/>
-	
+    xmlns:fx="http://ns.adobe.com/mxml/2009"
+    xmlns:s="library://ns.adobe.com/flex/spark"
+    xmlns:mx="library://ns.adobe.com/flex/mx"
+    xmlns:components="org.openzoom.flex.components.*"
+    xmlns:controllers="org.openzoom.flash.viewport.controllers.*"
+    xmlns:transformers="org.openzoom.flash.viewport.transformers.*"
+    width="960"
+    height="600"
+    backgroundColor="#000000"
+    showStatusBar="false"
+    applicationComplete="applicationCompleteHandler(event)"
+    displayStateChange="displayStateChangeHandler(event)"
+    resize="resizeHandler(event)"
+    >
+
+    <fx:Declarations>
+        <s:HTTPService
+            id="mostPopularService"
+            url="http://api.gigapan.org/beta/gigapans/most_popular.json"
+            resultFormat="text"
+            result="mostPopularService_resultHandler(event)"
+            />
+    </fx:Declarations>
+
+    <fx:Script>
+        <![CDATA[
+
+            import com.adobe.serialization.json.JSON;
+
+            import mx.collections.ArrayCollection;
+            import mx.events.FlexEvent;
+            import mx.events.ResizeEvent;
+            import mx.rpc.events.ResultEvent;
+
+            import org.openzoom.flash.components.MultiScaleImage;
+            import org.openzoom.flash.descriptors.IImagePyramidDescriptor;
+            import org.openzoom.flash.descriptors.gigapan.GigaPanDescriptor;
+            import org.openzoom.flash.viewport.constraints.CenterConstraint;
+            import org.openzoom.flash.viewport.constraints.CompositeConstraint;
+            import org.openzoom.flash.viewport.constraints.ScaleConstraint;
+            import org.openzoom.flash.viewport.constraints.ZoomConstraint;
+            import org.openzoom.flash.viewport.controllers.ContextMenuController;
+            import org.openzoom.flash.viewport.controllers.KeyboardController;
+            import org.openzoom.flash.viewport.controllers.MouseController;
+            import org.openzoom.flash.viewport.transformers.TweenerTransformer;
+
+            // Constants
+            private static const DEFAULT_SCENE_DIMENSION:uint = 16384
+            private static const DEFAULT_PIXEL_RATIO:uint = 2
+            private static const DEFAULT_GIGAPAN:GigaPanDescriptor =
+                GigaPanDescriptor.fromID(5322, 154730, 36408)
+
+            // Variables
+            private var image:MultiScaleImage
+
+            [Bindable]
+            private var gigapansCollection:ArrayCollection = new ArrayCollection()
+
+            // Event handlers
+            private function applicationCompleteHandler(event:FlexEvent):void
+            {
+                // Event handlers
+                stage.addEventListener(FullScreenEvent.FULL_SCREEN,
+                                       fullscreenHandler,
+                                       false, 0, true)
+
+                mostPopularService.send()
+
+                // Descriptors
+                var descriptor:IImagePyramidDescriptor = DEFAULT_GIGAPAN
+
+                // Viewer
+                image = new MultiScaleImage()
+                image.source = descriptor
+
+                // Transformer
+                image.transformer = new TweenerTransformer()
+
+                // Controllers
+                image.controllers = [new MouseController(),
+                    new KeyboardController(),
+                    new ContextMenuController()]
+
+                // Constraints
+                var maxDimension:Number = Math.max(descriptor.width, descriptor.height)
+                var actualMaxScale:Number = maxDimension / DEFAULT_SCENE_DIMENSION
+                var maxScale:Number = actualMaxScale * DEFAULT_PIXEL_RATIO
+
+                var zoomConstraint:ZoomConstraint = new ZoomConstraint()
+                zoomConstraint.minZoom = 1
+                var centerConstraint:CenterConstraint = new CenterConstraint()
+                var scaleConstraint:ScaleConstraint = new ScaleConstraint()
+                scaleConstraint.maxScale = maxScale
+                var compositeConstraint:CompositeConstraint = new CompositeConstraint()
+                compositeConstraint.constraints = [zoomConstraint,
+                                                   scaleConstraint,
+                                                   centerConstraint]
+                image.constraint = compositeConstraint
+
+
+                imageContainer.addChild(image)
+                layoutApplication()
+            }
+
+            private function resizeHandler(event:ResizeEvent):void
+            {
+                layoutApplication()
+            }
+
+            private function displayStateChangeHandler(event:NativeWindowDisplayStateEvent):void
+            {
+                layoutApplication()
+            }
+
+            private function fullscreenHandler(event:FullScreenEvent):void
+            {
+                layoutApplication()
+            }
+
+            // Layout
+            private function layoutApplication():void
+            {
+                if (image)
+                {
+                    image.width = imageContainer.width
+                    image.height = imageContainer.height
+                }
+            }
+
+            private function mostPopularService_resultHandler(event:ResultEvent):void
+            {
+                var resultObject:Object = JSON.decode(event.result.toString())
+                var items:Array = resultObject.items || []
+                var gigapans:Array = []
+                items.forEach(function (item:Object, ...rest):void {
+                    var id:int = item[0]
+                    var gigapan:Object = item[1]
+                    gigapans.push({
+                        name: gigapan.name,
+                        id: gigapan.id,
+                        width: gigapan.width,
+                        height: gigapan.height
+                    })
+                })
+
+                gigapansCollection.source = gigapans
+            }
+
+            private function gigapansList_clickHandler(event:MouseEvent):void
+            {
+                var gigapan:Object = gigapansList.selectedItem
+
+                if (gigapan.id)
+                {
+                    var descriptor:GigaPanDescriptor =
+                        GigaPanDescriptor.fromID(gigapan.id,
+                            gigapan.width,
+                            gigapan.height)
+                    image.source = descriptor
+                }
+            }
+
+        ]]>
+    </fx:Script>
+
+    <s:SpriteVisualElement
+        id="imageContainer"
+        left="0"
+        right="200"
+        top="0"
+        bottom="0"
+        />
+
+    <s:List
+        id="gigapansList"
+        itemRenderer="org.openzoom.gigapan.itemRenderers.ListItem"
+        width="200"
+        right="0"
+        bottom="0"
+        top="0"
+        dataProvider="{gigapansCollection}"
+        click="gigapansList_clickHandler(event)"
+        />
+
 </s:WindowedApplication>
