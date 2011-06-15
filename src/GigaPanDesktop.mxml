@@ -48,6 +48,9 @@
 			// Constants
 			private static const DEFAULT_SCENE_DIMENSION:uint = 16384
 			private static const DEFAULT_PIXEL_RATIO:uint = 2
+			private static const DEFAULT_GIGAPAN:GigaPanDescriptor =
+				GigaPanDescriptor.fromID(5322, 154730, 36408)
+			
 			// Variables
 			private var image:MultiScaleImage
 			
@@ -59,14 +62,13 @@
 			{
 				// Event handlers
 				stage.addEventListener(FullScreenEvent.FULL_SCREEN,
-									   fullscreenHandler,
-									   false, 0, true)
-
-                // Descriptors
-				var descriptor:IImagePyramidDescriptor =
-						GigaPanDescriptor.fromID(5322, 154730, 36408)
-
+					fullscreenHandler,
+					false, 0, true)
+				
 				mostPopularService.send()
+				
+				// Descriptors
+				var descriptor:IImagePyramidDescriptor = DEFAULT_GIGAPAN
 				
 				// Viewer
 				image = new MultiScaleImage()
