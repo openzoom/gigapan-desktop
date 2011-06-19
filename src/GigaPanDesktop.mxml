@@ -215,6 +215,7 @@
         height="{ListItem.DEFAULT_HEIGHT + 16}"
         dataProvider="{gigapansCollection}"
         skinClass="org.openzoom.gigapan.skins.ListSkin"
+        borderVisible="false"
         rollOverColor="0x444444"
         selectionColor="0xFFFF00"
         change="gigapansList_changeHandler(event)"
