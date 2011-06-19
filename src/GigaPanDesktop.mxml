@@ -40,6 +40,7 @@
             import org.openzoom.flash.viewport.constraints.CenterConstraint;
             import org.openzoom.flash.viewport.constraints.CompositeConstraint;
             import org.openzoom.flash.viewport.constraints.ScaleConstraint;
+            import org.openzoom.flash.viewport.constraints.VisibilityConstraint;
             import org.openzoom.flash.viewport.constraints.ZoomConstraint;
             import org.openzoom.flash.viewport.controllers.ContextMenuController;
             import org.openzoom.flash.viewport.controllers.KeyboardController;
@@ -96,11 +97,13 @@
                 var centerConstraint:CenterConstraint = new CenterConstraint()
                 var scaleConstraint:ScaleConstraint = new ScaleConstraint()
                     scaleConstraint.maxScale = maxScale
+                var visibilityConstraint:VisibilityConstraint = new VisibilityConstraint()
 
                 var compositeConstraint:CompositeConstraint = new CompositeConstraint()
                 compositeConstraint.constraints = [zoomConstraint,
                                                    scaleConstraint,
-                                                   centerConstraint]
+                                                   centerConstraint,
+                                                   visibilityConstraint]
                 image.constraint = compositeConstraint
 
 
