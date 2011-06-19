@@ -3,6 +3,41 @@
     xmlns:fx="http://ns.adobe.com/mxml/2009"
     xmlns:s="library://ns.adobe.com/flex/spark"
     xmlns:mx="library://ns.adobe.com/flex/mx"
+    width="{aspectRatio * DEFAULT_HEIGHT}"
+    height="{DEFAULT_HEIGHT}"
+    dataChange="dataChangeHandler(event)"
     >
-    <s:Label text="{data.name}"/>
+
+    <fx:Script>
+        <![CDATA[
+            import mx.events.FlexEvent;
+
+            import org.openzoom.flash.utils.string.format;
+
+            [Bindable]
+            private var aspectRatio:Number = 1
+
+           ;[Bindable]
+            private var source:String = ""
+
+            public static const DEFAULT_HEIGHT:Number = 50
+            private static const IMAGE_BASE_URL:String = "http://api.gigapan.org/beta/gigapans"
+
+
+            private function dataChangeHandler(event:FlexEvent):void
+            {
+                aspectRatio = data.width / data.height
+                source = format("{0}/{1}-{2}x{3}.jpg",
+                    IMAGE_BASE_URL, data.id, DEFAULT_HEIGHT * 16, DEFAULT_HEIGHT)
+            }
+
+        ]]>
+    </fx:Script>
+
+    <s:Image
+        source="{source}"
+        width="100%"
+        height="100%"
+        />
+
 </s:ItemRenderer>
