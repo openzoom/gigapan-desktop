@@ -48,6 +48,9 @@
             import org.openzoom.flash.viewport.transformers.TweenerTransformer;
             import org.openzoom.gigapan.itemRenderers.ListItem;
 
+            import spark.events.IndexChangeEvent;
+            import spark.events.ListEvent;
+
             // Constants
             private static const DEFAULT_SCENE_DIMENSION:uint = 16384
             private static const DEFAULT_PIXEL_RATIO:uint = 1
@@ -153,8 +156,12 @@
 
             private function gigapansList_changeHandler(event:IndexChangeEvent):void
             {
+                // Reset title
+                gigapanTitle = ""
+
                 // Load selected GigaPan
                 var gigapan:Object = gigapansList.selectedItem
+                gigapanTitle = (gigapan && gigapan.name) ? gigapan.name : ""
 
                 if (gigapan && gigapan.id)
                 {
@@ -164,6 +171,18 @@
                                                  gigapan.height)
                     image.source = descriptor
                 }
+            }
+
+            private function gigapansList_itemRollOverHandler(event:ListEvent):void
+            {
+                var gigapan:Object = event.item
+                gigapanTitle = (gigapan && gigapan.name) ? gigapan.name : ""
+            }
+
+            private function gigapansList_itemRollOutHandler(event:ListEvent):void
+            {
+                // Reset title
+                gigapanTitle = ""
             }
 
             // Layout
@@ -197,6 +216,8 @@
         dataProvider="{gigapansCollection}"
         skinClass="org.openzoom.gigapan.skins.ListSkin"
         change="gigapansList_changeHandler(event)"
+        itemRollOver="gigapansList_itemRollOverHandler(event)"
+        itemRollOut="gigapansList_itemRollOutHandler(event)"
         />
 
     <s:Label
