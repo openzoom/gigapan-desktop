@@ -18,18 +18,24 @@
     <fx:Declarations>
         <s:HTTPService
             id="mostPopularService"
-            url="http://api.gigapan.org/beta/gigapans/most_popular.json"
+            url="http://gigapan-mobile.appspot.com/api/1/gigapans/popular?count=250"
             resultFormat="text"
-            result="mostPopularService_resultHandler(event)"
+            result="apiService_resultHandler(event)"
+            />
+        <s:HTTPService
+            id="mostRecentService"
+            url="http://gigapan-mobile.appspot.com/api/1/gigapans/recent?count=250"
+            resultFormat="text"
+            result="apiService_resultHandler(event)"
             />
     </fx:Declarations>
 
     <fx:Script>
         <![CDATA[
-
             import com.adobe.serialization.json.JSON;
 
             import mx.collections.ArrayCollection;
+            import mx.collections.ArrayList;
             import mx.events.FlexEvent;
             import mx.events.ResizeEvent;
             import mx.rpc.events.ResultEvent;
@@ -76,6 +82,7 @@
                                        false, 0, true)
 
                 mostPopularService.send()
+                mostRecentService.send()
 
                 // Descriptors
                 var descriptor:IImagePyramidDescriptor = DEFAULT_GIGAPAN
@@ -134,15 +141,14 @@
                 layoutApplication()
             }
 
-            private function mostPopularService_resultHandler(event:ResultEvent):void
+            private function apiService_resultHandler(event:ResultEvent):void
             {
                 // Load most popular GigaPans
-                var resultObject:Object = JSON.decode(event.result.toString())
-                var items:Array = resultObject.items || []
+                var resultObject:Array = JSON.decode(event.result.toString())
+                var items:Array = resultObject || []
                 var gigapans:Array = []
                 items.forEach(function (item:Object, ...rest):void {
-                    var id:int = item[0]
-                    var gigapan:Object = item[1]
+                    var gigapan:Object = item
                     gigapans.push({
                         name: gigapan.name,
                         id: gigapan.id,
@@ -151,7 +157,7 @@
                     })
                 })
 
-                gigapansCollection.source = gigapans
+                gigapansCollection.addAll(new ArrayList(gigapans))
             }
 
             private function gigapansList_changeHandler(event:IndexChangeEvent):void
