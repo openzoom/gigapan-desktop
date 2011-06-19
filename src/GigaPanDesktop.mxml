@@ -178,7 +178,7 @@
     <s:SpriteVisualElement
         id="imageContainer"
         left="0"
-        right="200"
+        right="0"
         top="0"
         bottom="0"
         />
@@ -186,10 +186,10 @@
     <s:List
         id="gigapansList"
         itemRenderer="org.openzoom.gigapan.itemRenderers.ListItem"
-        width="200"
+        left="0"
         right="0"
         bottom="0"
-        top="0"
+        height="100"
         dataProvider="{gigapansCollection}"
         click="gigapansList_clickHandler(event)"
         />
