@@ -50,6 +50,7 @@
             // Constants
             private static const DEFAULT_SCENE_DIMENSION:uint = 16384
             private static const DEFAULT_PIXEL_RATIO:uint = 1
+            // Hanauma Bay
             private static const DEFAULT_GIGAPAN:GigaPanDescriptor =
                 GigaPanDescriptor.fromID(5322, 154730, 36408)
 
@@ -138,6 +139,7 @@
 
             private function mostPopularService_resultHandler(event:ResultEvent):void
             {
+                // Load most popular GigaPans
                 var resultObject:Object = JSON.decode(event.result.toString())
                 var items:Array = resultObject.items || []
                 var gigapans:Array = []
@@ -157,6 +159,7 @@
 
             private function gigapansList_clickHandler(event:MouseEvent):void
             {
+                // Load selected GigaPan
                 var gigapan:Object = gigapansList.selectedItem
 
                 if (gigapan.id)
