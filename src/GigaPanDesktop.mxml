@@ -79,9 +79,12 @@
                 image.transformer = new TweenerTransformer()
 
                 // Controllers
-                image.controllers = [new MouseController(),
-                                     new KeyboardController(),
-                                     new ContextMenuController()]
+                var mouseController:MouseController = new MouseController()
+                var keyboardController:KeyboardController = new KeyboardController()
+                var contextMenuController:ContextMenuController= new ContextMenuController()
+                image.controllers = [mouseController,
+                                     keyboardController,
+                                     contextMenuController]
 
                 // Constraints
                 var maxDimension:Number = Math.max(descriptor.width, descriptor.height)
@@ -89,10 +92,11 @@
                 var maxScale:Number = actualMaxScale * DEFAULT_PIXEL_RATIO
 
                 var zoomConstraint:ZoomConstraint = new ZoomConstraint()
-                zoomConstraint.minZoom = 1
+                    zoomConstraint.minZoom = 1
                 var centerConstraint:CenterConstraint = new CenterConstraint()
                 var scaleConstraint:ScaleConstraint = new ScaleConstraint()
-                scaleConstraint.maxScale = maxScale
+                    scaleConstraint.maxScale = maxScale
+
                 var compositeConstraint:CompositeConstraint = new CompositeConstraint()
                 compositeConstraint.constraints = [zoomConstraint,
                                                    scaleConstraint,
