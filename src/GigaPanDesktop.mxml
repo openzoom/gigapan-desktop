@@ -127,16 +127,6 @@
                 layoutApplication()
             }
 
-            // Layout
-            private function layoutApplication():void
-            {
-                if (image)
-                {
-                    image.width = imageContainer.width
-                    image.height = imageContainer.height
-                }
-            }
-
             private function mostPopularService_resultHandler(event:ResultEvent):void
             {
                 // Load most popular GigaPans
@@ -169,6 +159,16 @@
                             gigapan.width,
                             gigapan.height)
                     image.source = descriptor
+                }
+            }
+
+            // Layout
+            private function layoutApplication():void
+            {
+                if (image)
+                {
+                    image.width = imageContainer.width
+                    image.height = imageContainer.height
                 }
             }
 
