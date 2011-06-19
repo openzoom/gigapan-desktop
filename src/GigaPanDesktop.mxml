@@ -46,6 +46,7 @@
             import org.openzoom.flash.viewport.controllers.KeyboardController;
             import org.openzoom.flash.viewport.controllers.MouseController;
             import org.openzoom.flash.viewport.transformers.TweenerTransformer;
+            import org.openzoom.gigapan.itemRenderers.ListItem;
 
             // Constants
             private static const DEFAULT_SCENE_DIMENSION:uint = 16384
@@ -189,9 +190,10 @@
         left="0"
         right="0"
         bottom="0"
-        height="100"
+        height="{ListItem.DEFAULT_HEIGHT + 16}"
         dataProvider="{gigapansCollection}"
         click="gigapansList_clickHandler(event)"
+        skinClass="org.openzoom.gigapan.skins.ListSkin"
         />
 
 </s:WindowedApplication>
