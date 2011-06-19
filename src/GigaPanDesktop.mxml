@@ -61,6 +61,9 @@
             [Bindable]
             private var gigapansCollection:ArrayCollection = new ArrayCollection()
 
+           ;[Bindable]
+            private var gigapanTitle:String = ""
+
             // Event handlers
             private function applicationCompleteHandler(event:FlexEvent):void
             {
@@ -195,5 +198,20 @@
         skinClass="org.openzoom.gigapan.skins.ListSkin"
         change="gigapansList_changeHandler(event)"
         />
+
+    <s:Label
+        id="titleLabel"
+        text="{gigapanTitle}"
+        color="0xFFFFFF"
+        fontFamily="Helvetica, Arial"
+        fontSize="24"
+        fontWeight="bold"
+        horizontalCenter="0"
+        bottom="80"
+        >
+        <s:filters>
+            <mx:GlowFilter color="0x000000"/>
+        </s:filters>
+   </s:Label>
 
 </s:WindowedApplication>
