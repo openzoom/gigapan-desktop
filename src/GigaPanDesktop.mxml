@@ -148,17 +148,17 @@
                 gigapansCollection.source = gigapans
             }
 
-            private function gigapansList_clickHandler(event:MouseEvent):void
+            private function gigapansList_changeHandler(event:IndexChangeEvent):void
             {
                 // Load selected GigaPan
                 var gigapan:Object = gigapansList.selectedItem
 
-                if (gigapan.id)
+                if (gigapan && gigapan.id)
                 {
                     var descriptor:GigaPanDescriptor =
                         GigaPanDescriptor.fromID(gigapan.id,
-                            gigapan.width,
-                            gigapan.height)
+                                                 gigapan.width,
+                                                 gigapan.height)
                     image.source = descriptor
                 }
             }
@@ -192,8 +192,8 @@
         bottom="0"
         height="{ListItem.DEFAULT_HEIGHT + 16}"
         dataProvider="{gigapansCollection}"
-        click="gigapansList_clickHandler(event)"
         skinClass="org.openzoom.gigapan.skins.ListSkin"
+        change="gigapansList_changeHandler(event)"
         />
 
 </s:WindowedApplication>
